@@ -5,7 +5,7 @@ from itertools import combinations, permutations
 import pandas as pd
 from sympy import *
 from sympy.ntheory.modular import crt
-
+from math import comb
 init_printing()
 
 def superscriptify(expr):
@@ -276,3 +276,37 @@ def solve_linear_congruence(a, b, m):
     x0 = (b_red * a_inv) % m_red
 
     return (x0, m_red, g)
+
+def solve_system_congruences(equations):
+    """
+    Solve a system of linear congruences given by:
+    equations = [(A1, B1, M1), (A2, B2, M2), ...]
+    meaning A_i * x ≡ B_i (mod M_i).
+
+    Returns: (solution, modulus) if a solution exists, otherwise None.
+    """
+    moduli = []
+    remainders = []
+
+    for (A, B, M) in equations:
+        g = gcd(A, M)
+        # Check if solution exists for this congruence
+        if B % g != 0:
+            return None  # No solution
+
+        # Reduce the congruence
+        A_red = A // g
+        B_red = B // g
+        M_red = M // g
+
+        # Compute the inverse of A_red mod M_red
+        A_inv = mod_inverse(A_red, M_red)
+        # Compute a particular solution x0
+        x0 = (B_red * A_inv) % M_red
+
+        moduli.append(M_red)
+        remainders.append(x0)
+
+    # Now solve the standard form system x ≡ remainders[i] (mod moduli[i])
+    solution, modulus = crt(moduli, remainders)
+    return (solution, modulus)
