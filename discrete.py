@@ -260,3 +260,19 @@ def test_formula(formula_func, reference_func, test_values=range(1, 11)):
         if lhs != rhs:
             return False
     return True
+
+def solve_linear_congruence(a, b, m):
+    g = gcd(a, m)
+    # Tjek om løsning eksisterer
+    if b % g != 0:
+        return None
+
+    # Reducer
+    a_red = a // g
+    b_red = b // g
+    m_red = m // g
+
+    a_inv = mod_inverse(a_red, m_red)
+    x0 = (b_red * a_inv) % m_red
+
+    return (x0, m_red, g)
