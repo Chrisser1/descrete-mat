@@ -310,3 +310,61 @@ def solve_system_congruences(equations):
     # Now solve the standard form system x ≡ remainders[i] (mod moduli[i])
     solution, modulus = crt(moduli, remainders)
     return (solution, modulus)
+
+def graph_properties_all(n, m=None):
+    """
+    Calculates the number of edges and vertices for multiple standard graph types.
+
+    Parameters:
+        n (int): A parameter related to the graph type (e.g., vertices or dimension for cube).
+        m (int, optional): For bipartite graphs, the size of the second partition.
+
+    Returns:
+        dict: A dictionary of all graph types with their properties or a message if not applicable.
+    """
+    results = {}
+
+    # Cube graph (n-dimensional hypercube)
+    try:
+        vertices = 2**n
+        edges = n * 2**(n-1)
+        results["Cube Graph"] = {"Vertices": vertices, "Edges": edges}
+    except Exception:
+        results["Cube Graph"] = "Not defined for n = {}".format(n)
+
+    # Complete graph
+    try:
+        vertices = n
+        edges = n * (n - 1) // 2
+        results["Complete Graph"] = {"Vertices": vertices, "Edges": edges}
+    except Exception:
+        results["Complete Graph"] = "Not defined for n = {}".format(n)
+
+    # Bipartite graph K(m, n)
+    try:
+        if m is not None:
+            vertices = n + m
+            edges = n * m
+            results["Bipartite Graph"] = {"Vertices": vertices, "Edges": edges}
+        else:
+            results["Bipartite Graph"] = "Requires both partitions (n and m)."
+    except Exception:
+        results["Bipartite Graph"] = "Not defined for n = {}, m = {}".format(n, m)
+
+    # Cycle graph
+    try:
+        vertices = n
+        edges = n
+        results["Cycle Graph"] = {"Vertices": vertices, "Edges": edges}
+    except Exception:
+        results["Cycle Graph"] = "Not defined for n = {}".format(n)
+
+    # Wheel graph
+    try:
+        vertices = n
+        edges = 2 * (n - 1)
+        results["Wheel Graph"] = {"Vertices": vertices, "Edges": edges}
+    except Exception:
+        results["Wheel Graph"] = "Not defined for n = {}".format(n)
+
+    return results
